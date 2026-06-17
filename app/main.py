@@ -11,6 +11,7 @@ from app import models  # noqa — Base가 Post 테이블을 인식하려면 반
 from app.models import post_model
 
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
