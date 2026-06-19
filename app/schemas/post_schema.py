@@ -47,3 +47,8 @@ class PostDetail(BaseModel):
     updated_at: datetime
     model_config = {"from_attributes": True}  # 위 속성(attributes)들을 json구조로 출력함.
     
+class PostListResponse(BaseModel) :
+    """
+    PostItem의 리스트 형태 (게시글 전체 조회 시 실제 반환되는 json)
+    """
+    posts: List[PostItem]
