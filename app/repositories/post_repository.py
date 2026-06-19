@@ -49,3 +49,9 @@ class PostRepository :
     self.db.refresh(post) # 갱신
     
     return post
+  
+  def get_post_list(self) -> List[Post] :
+    """
+      게시글 전체 목록 반환
+    """
+    return self.db.query(Post).all()
