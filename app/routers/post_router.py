@@ -34,3 +34,10 @@ def create_post(
 ) :
   post_Detail = service.create_post(data)
   return post_Detail
+
+@router.get("/{id}", response_model=PostDetail, summary="게시글 상세 조회")
+def get_post(
+  id:int=Path(..., ge=1),
+  service:PostService=Depends(get_post_service)
+) :
+  service.get_post_detail(id)
