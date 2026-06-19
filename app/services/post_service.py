@@ -11,13 +11,24 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 from app.schemas.post_schema import PostCreate, PostDetail
-from app.repoistories.post_repository import PostRepository
+from app.repositories.post_repository import PostRepository
 
 class PostService :
   
   def __init__(self, db:Session):
     self.db = db
     self.repo = PostRepository(db)  # repo 멤버변수에 PostRepository 객체 주입
+  
+  def _get_or_404(self, id:int) :
+    """
+        게시글을 조회하고 없으면 404 예외를 발생시킵니다.
+        여러 메서드(조회, 수정, 삭제, 댓글 등)에서 공통으로 사용하는 검증 로직입니다.
+    """
+    post = self.repo.get_by_id(id)
+    if not post :
+      raise HTTPException(status_code=404, detail="게시글을 찾을 수 없습니다.")
+    
+    return post
   
   def create_post(self, data:PostCreate) -> PostDetail :
     """
@@ -29,8 +40,15 @@ class PostService :
     return PostDetail.model_validate(post)
     
     
-  def read_post() :
+  def get_post_detail(self, id) -> PostDetail :
     """
-      게시글을 조회하는 서비스 함수
+      게시글을 조회하는 서비스 함수,
+      해당 게시글의 조회수를 1 증가 하자.
+      select + update 문이 하나의 db 세션에 의해 처리되었다. => 트랜잭션 처리
     """
+    print(f"{id}번 글을 조회하자!!!!!!!!")
     
+    post = self._get_or_404(id) # id번 글 조회
+    post = self.repo.increament_view_count(post)  # 조회수 증가
+    
+    return PostDetail.model_validate(post)
