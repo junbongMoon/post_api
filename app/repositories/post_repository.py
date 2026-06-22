@@ -50,11 +50,15 @@ class PostRepository :
     
     return post
   
-  def get_post_list(self) -> List[Post] :
+  def get_post_list(self, offset:int = 0, limit:int = 10) -> List[Post] :
     """
       게시글 전체 목록 반환
+      페이징 (offset, limit는 service단에서 계산된 값을 받아서 처리)
     """
-    return self.db.query(Post).all()
+    query = self.db.query(Post)   # "SELECT * FROM post;" 쿼리문 자체
+    # limit 옵셋, 페이지당 출력될 행의 수를 붙여 실행하여 반환
+    return query.offset(offset=offset).limit(limit=limit).all() 
+    
   
   def get_post_count(self) -> int:
     """
