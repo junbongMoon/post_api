@@ -46,7 +46,10 @@ def get_post(
 def get_list(
   page:int = Query(1, ge=1, description="페이지 번호"),
   per_page:int = Query(10, ge=10, le=100, description="페이지 당 항목 수"),
+  search:Optional[str] = Query(None, description="제목 검색어"),
+  author:Optional[str] = Query(None, description="작성자 필터"),
+  order_by:str = Query("latest", description="latest | views"),
   service:PostService=Depends(get_post_service)
 ) :
-  return service.get_list(page, per_page)
+  return service.get_list(page, per_page, search, author, order_by)
 
