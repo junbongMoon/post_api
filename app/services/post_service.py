@@ -53,11 +53,23 @@ class PostService :
     
     return PostDetail.model_validate(post)
   
-  def get_list(self) -> PostListResponse : 
+  def get_list(self, page:int, per_page:int) -> PostListResponse : 
     """
       게시글 전체 조회
+      페이징 처리를 위해 router단에서 page(현제 페이지번호), per_page(페이지 당 보여줄 글의 갯수)를 넘겨받음.
     """
-    posts = self.repo.get_post_list() # List[Post] 타입 반환
+
+    # 1. 전체 데이터 수 조회(페이징 계산용)
+    count = self.repo.get_post_count()
+    
+    # 2. offset 계산
+    # (현재 페이지 번호 - 1) * 페이지당 보여줄 글의 갯수
+    offset = (page - 1) * per_page
+    
+    # 3. 페이징 된 게시글 목록 조회
+    posts = self.repo.get_post_list(
+      offset=offset, limit=per_page
+      ) # List[Post] 타입 반환
     
     # Respository 단에서 반환되는 List[Post]는 Post객체를 List[]에 감싼 타입이다. (json이 아님) => ORM에서 반환 되는 기본 값.
     # 그래서 우리는 PostItem(한건의 게시글 json) schema를 감싼 PostListResponse 스키마를 만들어 반환하는 구조를 
