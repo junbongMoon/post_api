@@ -31,9 +31,9 @@ def calc_paging_block (
   
   # ----------------- 페이징 블럭 계산 ---------------------------
   total_paging_block_cnt = max(1, math.ceil(total_page_cnt / page_cnt_per_block)) # 전체 블럭 수
-  page_block_of_current = math.ceil(page_no / page_cnt_per_block) # 현재 페이지가 속한 블럭 번호  
-  start_num = (page_block_of_current - 1) * page_cnt_per_block + 1  # 현재 블럭의 첫번째 페이지 번호
-  end_num = min(page_block_of_current * page_cnt_per_block, total_page_cnt) # 현재 블럭의 마지막 페이지 번호
+  page_block_of_current_page = math.ceil(page_no / page_cnt_per_block) # 현재 페이지가 속한 블럭 번호  
+  start_num = (page_block_of_current_page - 1) * page_cnt_per_block + 1  # 현재 블럭의 첫번째 페이지 번호
+  end_num = min(page_block_of_current_page * page_cnt_per_block, total_page_cnt) # 현재 블럭의 마지막 페이지 번호
   
   return {
         # 기본 페이징
