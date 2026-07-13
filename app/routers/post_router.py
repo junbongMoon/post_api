@@ -27,7 +27,7 @@ def get_post_service(db:Session = Depends(get_db)) -> PostService :
   return PostService(db)  # PostService (서비스 단의 생성자 함수 호출)
   
 
-@router.post("", response_model=PostListResponse, status_code=201, summary="게시글 등록")
+@router.post("", response_model=PostListResponse, status_code=201, summary="게시글 등록", operation_id="create_post" )
 def create_post(
   data:PostCreate,
   service:PostService = Depends(get_post_service)
@@ -35,14 +35,14 @@ def create_post(
   post_Detail = service.create_post(data)
   return post_Detail
 
-@router.get("/{id}", response_model=PostDetail, summary="게시글 상세 조회")
+@router.get("/{id}", response_model=PostDetail, summary="게시글 상세 조회", operation_id="get_post")
 def get_post(
   id:int=Path(..., ge=1),
   service:PostService=Depends(get_post_service)
 ) :
   return service.get_post_detail(id)
 
-@router.get("", response_model=PostListResponse, summary="게시글 전체 조회")
+@router.get("", response_model=PostListResponse, summary="게시글 전체 조회", operation_id="list_posts")
 def get_list(
   page:int = Query(1, ge=1, description="페이지 번호"),
   per_page:int = Query(10, ge=10, le=100, description="페이지 당 항목 수"),
@@ -53,7 +53,7 @@ def get_list(
 ) :
   return service.get_list(page, per_page, search, author, order_by)
 
-@router.put("/{id}", response_model=PostDetail, summary="게시글 수정")
+@router.put("/{id}", response_model=PostDetail, summary="게시글 수정", operation_id="update_post")
 def update(
   id:int = Path(..., ge=1),
   data:PostUpdate = ...,
@@ -61,12 +61,17 @@ def update(
 ) :
   return service.update_post(id, data=data)
 
-@router.delete("/{id}", status_code=204, summary="게시글 삭제")
+@router.delete("/{id}", status_code=204, summary="게시글 삭제", operation_id="delete_post")
 def delete_post(
     id: int = Path(..., ge=1), # 삭제할 게시글 번호
     service: PostService = Depends(get_post_service),
 ):
     service.delete_post(id)
+
+
+# ── 아래 두 엔드포인트는 이번 실습(핵심 CRUD)에서는 MCP로 노출하지 않습니다. ──
+# operation_id를 지정하지 않아도 되고(자동 생성값 유지), Step 2에서
+# include_operations 목록에 넣지 않으면 자동으로 제외됩니다.
     
 @router.post("/with-files", response_model=PostDetailWithStat, status_code=201, summary="게시글 + 통계 + 첨부파일 등록")
 def create_post_with_attachments(
