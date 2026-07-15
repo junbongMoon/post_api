@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app import models  # noqa — Base가 Post 테이블을 인식하려면 반드시 import
 # from app.routers.post_router import router as post_router
 from app.models import post_model
+from app.models import user
 from app.routers.post_router import router as post_router
 
 
