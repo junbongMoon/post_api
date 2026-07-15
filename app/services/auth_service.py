@@ -7,7 +7,7 @@ from fastapi import HTTPException, status
 
 from app.repositories.user_repository import UserRepository
 from app.auth.jwt import hash_password
-from app.auth import UserCreate, UserInfo
+from app.schemas.auth import UserCreate, UserInfo
 
 class AuthService :
   def __init__(self, db: Session):
