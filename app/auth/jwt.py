@@ -55,7 +55,7 @@ def generate_refresh_token() -> str :
   """
   return secrets.token_urlsafe(32)
 
-def generate_refresh_token_expire() -> datetime :
+def generate_refresh_token_expiry() -> datetime :
   """
   리프레시 토큰의 만료일 생성
   """
